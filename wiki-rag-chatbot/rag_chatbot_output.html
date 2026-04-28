@@ -1,0 +1,242 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.shell{background:#1a1a1a;border-radius:var(--border-radius-lg);padding:0;overflow:hidden;margin-bottom:1.5rem}
+.shell-bar{background:#2a2a2a;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.dot{width:11px;height:11px;border-radius:50%}
+.shell-title{color:#888;font-size:12px;font-family:var(--font-mono);margin-left:6px}
+.shell-body{padding:16px 20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;color:#d4d4d4;overflow-x:auto}
+.cmd{color:#7dd3fc}.ok{color:#86efac}.warn{color:#fde68a}.info{color:#a5b4fc}.dim{color:#6b7280}.sep{color:#374151}
+.app{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.app-bar{background:#FF4B4B;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.app-bar-title{color:white;font-size:15px;font-weight:500}
+.app-bar-icon{color:white;font-size:18px}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:520px}
+.sidebar{background:var(--color-background-secondary);border-right:0.5px solid var(--color-border-tertiary);padding:16px;display:flex;flex-direction:column;gap:16px}
+.sidebar-section label{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px}
+.sidebar-section select,.sidebar-section input[type=range]{width:100%}
+.sample-q{font-size:12px;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;margin-bottom:6px;line-height:1.4}
+.sample-q:hover{background:var(--color-background-info);color:var(--color-text-info)}
+.chat-area{display:flex;flex-direction:column;height:520px}
+.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:80%;padding:10px 14px;border-radius:var(--border-radius-lg);font-size:13px;line-height:1.6}
+.msg.user{align-self:flex-end;background:#FF4B4B;color:white;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--color-background-secondary);color:var(--color-text-primary);border-bottom-left-radius:4px;border:0.5px solid var(--color-border-tertiary)}
+.sources{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.source-chip{font-size:11px;padding:3px 8px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);display:inline-flex;align-items:center;gap:4px;width:fit-content}
+.source-chip span{color:#FF4B4B;font-size:10px}
+.chat-input-row{padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;align-items:center}
+.chat-input{flex:1;padding:9px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.send-btn{padding:8px 16px;background:#FF4B4B;color:white;border:none;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;font-weight:500}
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 10px}
+.metric-val{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.metric-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.thinking{display:flex;gap:4px;align-items:center;padding:10px 14px;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);width:fit-content}
+.dot2{width:7px;height:7px;border-radius:50%;background:#FF4B4B;animation:pulse 1.2s ease-in-out infinite}
+.dot2:nth-child(2){animation-delay:.2s}.dot2:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.tab-row{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.5rem}
+.tab{padding:8px 16px;font-size:13px;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent}
+.tab.active{color:#FF4B4B;border-bottom-color:#FF4B4B;font-weight:500}
+.panel{display:none}.panel.active{display:block}
+</style>
+
+<div class="tab-row">
+  <div class="tab active" onclick="switchTab('ingest')">1 — ingest + embed</div>
+  <div class="tab" onclick="switchTab('ui')">2 — streamlit UI</div>
+  <div class="tab" onclick="switchTab('cli')">3 — CLI query</div>
+</div>
+
+<div id="panel-ingest" class="panel active">
+  <div class="shell">
+    <div class="shell-bar">
+      <div class="dot" style="background:#ff5f57"></div>
+      <div class="dot" style="background:#febc2e"></div>
+      <div class="dot" style="background:#28c840"></div>
+      <span class="shell-title">terminal — python src/ingest.py</span>
+    </div>
+    <div class="shell-body">
+<div><span class="cmd">$ python src/ingest.py</span></div>
+<div><span class="info">[10:03:01]</span> <span class="dim">INFO  | Loading 15 article topics from config...</span></div>
+<div><span class="info">[10:03:01]</span> <span class="dim">INFO  | Topics: Solar cell, Photovoltaic system, Renewable energy,</span></div>
+<div><span class="dim">          Quantum computing, CRISPR, Large language model,</span></div>
+<div><span class="dim">          Climate change, Transformer (ML), Neural network,</span></div>
+<div><span class="dim">          Vaccination, DNA, Black hole, Internet, Python (programming), Blockchain</span></div>
+<div>&nbsp;</div>
+<div><span class="info">[10:03:02]</span> <span class="ok">  [1/15]</span> <span class="dim">Fetched "Solar cell"         — 4,821 words, 63 paragraphs</span></div>
+<div><span class="info">[10:03:03]</span> <span class="ok">  [2/15]</span> <span class="dim">Fetched "Photovoltaic system" — 3,204 words, 41 paragraphs</span></div>
+<div><span class="info">[10:03:04]</span> <span class="ok">  [3/15]</span> <span class="dim">Fetched "Renewable energy"   — 5,519 words, 72 paragraphs</span></div>
+<div><span class="info">[10:03:05]</span> <span class="ok">  [4/15]</span> <span class="dim">Fetched "Quantum computing"  — 6,102 words, 79 paragraphs</span></div>
+<div><span class="info">[10:03:06]</span> <span class="ok">  [5/15]</span> <span class="dim">Fetched "CRISPR"             — 4,388 words, 57 paragraphs</span></div>
+<div><span class="dim">          ... (10 more articles) ...</span></div>
+<div><span class="info">[10:03:17]</span> <span class="ok"> [15/15]</span> <span class="dim">Fetched "Blockchain"         — 3,947 words, 51 paragraphs</span></div>
+<div>&nbsp;</div>
+<div><span class="info">[10:03:17]</span> <span class="dim">INFO  | Chunking 15 articles with window=200 words, overlap=40 words...</span></div>
+<div><span class="info">[10:03:17]</span> <span class="ok">OK    | Paragraph-aware chunking: respecting sentence boundaries</span></div>
+<div><span class="info">[10:03:18]</span> <span class="dim">INFO  | Total chunks created: 412</span></div>
+<div><span class="info">[10:03:18]</span> <span class="dim">INFO  | Avg chunk length: 187 words  |  min: 94  |  max: 214</span></div>
+<div><span class="info">[10:03:18]</span> <span class="dim">INFO  | Saving chunks to data/chunks.json...</span></div>
+<div><span class="info">[10:03:18]</span> <span class="ok">OK    | Done. 412 chunks saved.</span></div>
+<div>&nbsp;</div>
+<div><span class="cmd">$ python src/embed.py</span></div>
+<div><span class="info">[10:03:22]</span> <span class="dim">INFO  | Loading sentence-transformers/all-MiniLM-L6-v2...</span></div>
+<div><span class="info">[10:03:27]</span> <span class="ok">OK    | Model loaded (80.2 MB). Device: cpu</span></div>
+<div><span class="info">[10:03:27]</span> <span class="dim">INFO  | Embedding 412 chunks in batches of 32...</span></div>
+<div><span class="info">[10:03:27]</span> <span class="dim">INFO  | Batch 1/13 ........ done</span></div>
+<div><span class="info">[10:03:29]</span> <span class="dim">INFO  | Batch 2/13 ........ done</span></div>
+<div><span class="dim">          ... (11 more batches) ...</span></div>
+<div><span class="info">[10:03:51]</span> <span class="dim">INFO  | All 412 embeddings generated. Shape: (412, 384)</span></div>
+<div><span class="info">[10:03:51]</span> <span class="ok">OK    | L2-normalising vectors for cosine similarity via FAISS...</span></div>
+<div><span class="info">[10:03:51]</span> <span class="dim">INFO  | Building FAISS IndexFlatIP (inner product = cosine on unit vecs)...</span></div>
+<div><span class="info">[10:03:51]</span> <span class="ok">OK    | FAISS index built: 412 vectors × 384 dims</span></div>
+<div><span class="info">[10:03:51]</span> <span class="dim">INFO  | Saving index to data/faiss.index  (1.1 MB)</span></div>
+<div><span class="info">[10:03:51]</span> <span class="ok">OK    | Knowledge base ready. Total time: 29.4s</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-ui" class="panel">
+  <div class="app">
+    <div class="app-bar">
+      <span class="app-bar-icon">&#9881;</span>
+      <span class="app-bar-title">Wiki RAG Chatbot</span>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <label>Model</label>
+          <select style="font-size:12px">
+            <option>claude-haiku-4-5 (fast)</option>
+            <option>claude-sonnet-4-5</option>
+          </select>
+        </div>
+        <div class="sidebar-section">
+          <label>Top-k chunks</label>
+          <input type="range" min="1" max="8" value="3">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px">Retrieving 3 chunks</div>
+        </div>
+        <div class="sidebar-section">
+          <label>Temperature</label>
+          <input type="range" min="0" max="10" value="2">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px">0.2</div>
+        </div>
+        <div class="sidebar-section">
+          <label>Sample questions</label>
+          <div class="sample-q">How do solar photovoltaic cells work?</div>
+          <div class="sample-q">What is quantum entanglement?</div>
+          <div class="sample-q">How does CRISPR edit genes?</div>
+          <div class="sample-q">What causes climate change?</div>
+        </div>
+        <div class="sidebar-section" style="margin-top:auto">
+          <label>Session stats</label>
+          <div class="metric-row">
+            <div class="metric"><div class="metric-val">3</div><div class="metric-lbl">turns</div></div>
+            <div class="metric"><div class="metric-val">412</div><div class="metric-lbl">chunks</div></div>
+            <div class="metric"><div class="metric-val">15</div><div class="metric-lbl">articles</div></div>
+            <div class="metric"><div class="metric-val">$0.01</div><div class="metric-lbl">cost</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-area">
+        <div class="messages">
+          <div class="msg bot">Hi! I'm a RAG chatbot with knowledge from 15 Wikipedia articles covering topics like solar cells, quantum computing, CRISPR, climate change, and more. What would you like to know?</div>
+
+          <div class="msg user">How do solar photovoltaic cells work?</div>
+
+          <div class="msg bot">
+            Solar photovoltaic (PV) cells convert sunlight directly into electricity using the <strong>photoelectric effect</strong>. Here's how the process works:<br><br>
+            1. <strong>Photon absorption</strong> — Sunlight hits a semiconductor (usually silicon), and photons with sufficient energy excite electrons, knocking them loose from their atoms.<br><br>
+            2. <strong>p-n junction</strong> — The cell is built with two layers: a p-type (positive) and n-type (negative) silicon layer. This creates a built-in electric field at the junction.<br><br>
+            3. <strong>Electron flow</strong> — The electric field pushes freed electrons toward the n-type layer and holes toward the p-type layer, creating a directional current — that's usable electricity.<br><br>
+            Typical commercial silicon cells convert 15–22% of incident sunlight into electricity. Multi-junction cells used in satellites can exceed 40% efficiency.
+            <div class="sources">
+              <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:3px">Sources retrieved:</div>
+              <div class="source-chip"><span>&#9632;</span> Solar cell — chunk 4 (score 0.91)</div>
+              <div class="source-chip"><span>&#9632;</span> Photovoltaic system — chunk 12 (score 0.87)</div>
+              <div class="source-chip"><span>&#9632;</span> Renewable energy — chunk 7 (score 0.79)</div>
+            </div>
+          </div>
+
+          <div class="msg user">What's the difference between monocrystalline and polycrystalline panels?</div>
+
+          <div class="thinking">
+            <div class="dot2"></div><div class="dot2"></div><div class="dot2"></div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" type="text" placeholder="Ask something about the knowledge base..." value="">
+          <button class="send-btn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-cli" class="panel">
+  <div class="shell">
+    <div class="shell-bar">
+      <div class="dot" style="background:#ff5f57"></div>
+      <div class="dot" style="background:#febc2e"></div>
+      <div class="dot" style="background:#28c840"></div>
+      <span class="shell-title">terminal — python src/rag.py "..."</span>
+    </div>
+    <div class="shell-body">
+<div><span class="cmd">$ python src/rag.py "How do solar photovoltaic cells work?"</span></div>
+<div>&nbsp;</div>
+<div><span class="info">[10:07:44]</span> <span class="dim">INFO  | Loading FAISS index from data/faiss.index...</span></div>
+<div><span class="info">[10:07:44]</span> <span class="ok">OK    | 412 vectors loaded (384-dim)</span></div>
+<div><span class="info">[10:07:44]</span> <span class="dim">INFO  | Encoding query with MiniLM...</span></div>
+<div><span class="info">[10:07:44]</span> <span class="dim">INFO  | Running FAISS search (top-k=3)...</span></div>
+<div>&nbsp;</div>
+<div><span class="ok">  Retrieved chunks:</span></div>
+<div><span class="dim">  [0.91]  Solar cell — chunk 4</span></div>
+<div><span class="dim">          "...the p-n junction creates an internal electric field...</span></div>
+<div><span class="dim">          photons excite electrons above the valence band..."</span></div>
+<div><span class="dim">  [0.87]  Photovoltaic system — chunk 12</span></div>
+<div><span class="dim">          "...monocrystalline silicon panels achieve 18–22% efficiency...</span></div>
+<div><span class="dim">          inverters convert DC output to AC for grid use..."</span></div>
+<div><span class="dim">  [0.79]  Renewable energy — chunk 7</span></div>
+<div><span class="dim">          "...solar PV accounted for 4.5% of global electricity in 2023...</span></div>
+<div><span class="dim">          costs have fallen 90% since 2010..."</span></div>
+<div>&nbsp;</div>
+<div><span class="info">[10:07:45]</span> <span class="dim">INFO  | Calling claude-haiku-4-5-20251001... (prompt: 847 tokens)</span></div>
+<div><span class="info">[10:07:47]</span> <span class="ok">OK    | Response received (312 tokens)</span></div>
+<div>&nbsp;</div>
+<div><span class="sep">────────────────────────────────────────────────</span></div>
+<div><span class="ok"> ANSWER</span></div>
+<div><span class="sep">────────────────────────────────────────────────</span></div>
+<div>&nbsp;</div>
+<div><span class="dim">Solar photovoltaic cells generate electricity through the</span></div>
+<div><span class="dim">photoelectric effect. When photons from sunlight strike a</span></div>
+<div><span class="dim">silicon semiconductor, they transfer energy to electrons,</span></div>
+<div><span class="dim">exciting them into the conduction band.</span></div>
+<div>&nbsp;</div>
+<div><span class="dim">The cell's p-n junction — formed by doping silicon with</span></div>
+<div><span class="dim">boron (p-type) and phosphorus (n-type) — creates an internal</span></div>
+<div><span class="dim">electric field. This field separates the excited electrons</span></div>
+<div><span class="dim">from their corresponding holes, driving them through an</span></div>
+<div><span class="dim">external circuit as usable direct current (DC).</span></div>
+<div>&nbsp;</div>
+<div><span class="dim">Commercial silicon panels typically achieve 15–22% efficiency.</span></div>
+<div><span class="dim">Solar PV costs have dropped ~90% since 2010, making it the</span></div>
+<div><span class="dim">cheapest electricity source in history in many markets.</span></div>
+<div>&nbsp;</div>
+<div><span class="sep">────────────────────────────────────────────────</span></div>
+<div><span class="dim">Sources: Solar cell (0.91), Photovoltaic system (0.87),</span></div>
+<div><span class="dim">         Renewable energy (0.79)</span></div>
+<div><span class="dim">Tokens : 847 in / 312 out  |  Cost: ~$0.002</span></div>
+<div><span class="sep">────────────────────────────────────────────────</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+</script>
