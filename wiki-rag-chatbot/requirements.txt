@@ -1,0 +1,14 @@
+# Core RAG pipeline
+sentence-transformers>=2.7.0
+faiss-cpu>=1.8.0
+wikipedia>=1.4.0
+
+# LLM provider (Anthropic by default; swap for openai/groq/etc as needed)
+anthropic>=0.40.0
+
+# UI
+streamlit>=1.32.0
+
+# Utilities
+python-dotenv>=1.0.0
+numpy>=1.24
